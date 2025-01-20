@@ -2,7 +2,7 @@
 
 ;; Author: Masahiro Hayashi <mhayashi1120@gmail.com>
 ;; Keywords: extensions, data, tools
-;; URL: https://github.com/mhayashi1120/Emacs-rectplus
+;; URL: https://github.com/mhayashi1120/Emacs-recter
 ;; Emacs: GNU Emacs 22 or later
 ;; Version: 1.1.1
 ;; Package-Requires: ()
@@ -32,30 +32,30 @@
 ;; desired. And put the following expression into your ~/.emacs.
 ;;
 ;;     (require 'recter)
-;;     (define-key ctl-x-r-map "C" 'rectplus-copy-rectangle)
-;;     (define-key ctl-x-r-map "N" 'rectplus-insert-number-rectangle)
-;;     (define-key ctl-x-r-map "\M-c" 'rectplus-create-rectangle-by-regexp)
-;;     (define-key ctl-x-r-map "A" 'rectplus-append-rectangle-to-eol)
-;;     (define-key ctl-x-r-map "R" 'rectplus-kill-ring-to-rectangle)
-;;     (define-key ctl-x-r-map "K" 'rectplus-rectangle-to-kill-ring)
-;;     (define-key ctl-x-r-map "\M-l" 'rectplus-downcase-rectangle)
-;;     (define-key ctl-x-r-map "\M-u" 'rectplus-upcase-rectangle)
-;;     (define-key ctl-x-r-map "E" 'rectplus-copy-to-eol)
-;;     (define-key ctl-x-r-map "\M-E" 'rectplus-kill-to-eol)
+;;     (define-key ctl-x-r-map "C" 'recter-copy-rectangle)
+;;     (define-key ctl-x-r-map "N" 'recter-insert-number-rectangle)
+;;     (define-key ctl-x-r-map "\M-c" 'recter-create-rectangle-by-regexp)
+;;     (define-key ctl-x-r-map "A" 'recter-append-rectangle-to-eol)
+;;     (define-key ctl-x-r-map "R" 'recter-kill-ring-to-rectangle)
+;;     (define-key ctl-x-r-map "K" 'recter-rectangle-to-kill-ring)
+;;     (define-key ctl-x-r-map "\M-l" 'recter-downcase-rectangle)
+;;     (define-key ctl-x-r-map "\M-u" 'recter-upcase-rectangle)
+;;     (define-key ctl-x-r-map "E" 'recter-copy-to-eol)
+;;     (define-key ctl-x-r-map "\M-E" 'recter-kill-to-eol)
 
 ;; ```********** Emacs 22 or earlier **********```
 ;;
 ;;     (require 'recter)
-;;     (global-set-key "\C-xrC" 'rectplus-copy-rectangle)
-;;     (global-set-key "\C-xrN" 'rectplus-insert-number-rectangle)
-;;     (global-set-key "\C-xr\M-c" 'rectplus-create-rectangle-by-regexp)
-;;     (global-set-key "\C-xrA" 'rectplus-append-rectangle-to-eol)
-;;     (global-set-key "\C-xrR" 'rectplus-kill-ring-to-rectangle)
-;;     (global-set-key "\C-xrK" 'rectplus-rectangle-to-kill-ring)
-;;     (global-set-key "\C-xr\M-l" 'rectplus-downcase-rectangle)
-;;     (global-set-key "\C-xr\M-u" 'rectplus-upcase-rectangle)
-;;     (global-set-key "\C-xrE" 'rectplus-copy-to-eol)
-;;     (global-set-key "\C-xr\M-E" 'rectplus-kill-to-eol)
+;;     (global-set-key "\C-xrC" 'recter-copy-rectangle)
+;;     (global-set-key "\C-xrN" 'recter-insert-number-rectangle)
+;;     (global-set-key "\C-xr\M-c" 'recter-create-rectangle-by-regexp)
+;;     (global-set-key "\C-xrA" 'recter-append-rectangle-to-eol)
+;;     (global-set-key "\C-xrR" 'recter-kill-ring-to-rectangle)
+;;     (global-set-key "\C-xrK" 'recter-rectangle-to-kill-ring)
+;;     (global-set-key "\C-xr\M-l" 'recter-downcase-rectangle)
+;;     (global-set-key "\C-xr\M-u" 'recter-upcase-rectangle)
+;;     (global-set-key "\C-xrE" 'recter-copy-to-eol)
+;;     (global-set-key "\C-xr\M-E" 'recter-kill-to-eol)
 
 ;;; Code:
 
@@ -67,7 +67,7 @@
 ;;; Internal function
 ;;;
 
-(defun rectplus--just-a-format-p (fmt)
+(defun recter--just-a-format-p (fmt)
   (and
    (condition-case nil (format fmt 1) (error nil))
    ;; heuristic check ;-)
@@ -87,7 +87,7 @@
            (setq i (1+ i))))
        t))))
 
-(defun rectplus--count-lines (start end)
+(defun recter--count-lines (start end)
   (let ((lines 0))
     (save-excursion
       (goto-char start)
@@ -97,7 +97,7 @@
         (setq lines (1+ lines))))
     lines))
 
-(defun rectplus-do-translate (start end translator)
+(defun recter-do-translate (start end translator)
   "TRANSLATOR is function accept one string argument and return string."
   (apply-on-rectangle
    (lambda (s e)
@@ -118,7 +118,7 @@
 ;; Read minibuffer
 ;;
 
-(defun rectplus-read-from-minibuffer (prompt must-match-regexp &optional default)
+(defun recter-read-from-minibuffer (prompt must-match-regexp &optional default)
   "Check input string by MUST-MACH-REGEXP.
 See `read-from-minibuffer'."
   (let (str)
@@ -130,12 +130,12 @@ See `read-from-minibuffer'."
 	(setq str nil)))
     str))
 
-(defun rectplus-read-number (prompt default)
-  (string-to-number (rectplus-read-from-minibuffer
+(defun recter-read-number (prompt default)
+  (string-to-number (recter-read-from-minibuffer
 		     prompt "\\`[-+]?[0-9]+\\'"
 		     (number-to-string default))))
 
-(defun rectplus-non-rectangle-to-rectangle (strings)
+(defun recter-non-rectangle-to-rectangle (strings)
   (let ((max 0))
     (dolist (s strings)
       (let ((wid (string-width s)))
@@ -147,7 +147,7 @@ See `read-from-minibuffer'."
          (format fmt s))
        strings))))
 
-(defun rectplus-read-regexp (prompt)
+(defun recter-read-regexp (prompt)
   (if (fboundp 'read-regexp)
       (read-regexp prompt)
     (read-from-minibuffer (concat prompt ": "))))
@@ -156,7 +156,7 @@ See `read-from-minibuffer'."
 ;; message
 ;;
 
-(defun rectplus-msg--after-kill ()
+(defun recter-msg--after-kill ()
   (message "%s"
            (substitute-command-keys
 	    (concat "Killed text converted to rectangle. "
@@ -166,7 +166,7 @@ See `read-from-minibuffer'."
 ;; Internal function
 ;;
 
-(defun rectplus--*-to-eol-region (start end &optional delete)
+(defun recter--*-to-eol-region (start end &optional delete)
   (save-excursion
     ;; save end as marker
     (goto-char end)
@@ -184,15 +184,15 @@ See `read-from-minibuffer'."
         (move-to-column start-col))
       (setq list (nreverse list))
       (setq killed-rectangle
-            (rectplus-non-rectangle-to-rectangle list))))
-  (rectplus-msg--after-kill))
+            (recter-non-rectangle-to-rectangle list))))
+  (recter-msg--after-kill))
 
 ;;;
 ;;; Interactive Command
 ;;;
 
 ;;;###autoload
-(defun rectplus-rectangle-to-kill-ring ()
+(defun recter-rectangle-to-kill-ring ()
   "Killed rectangle to normal `kill-ring'.
 After executing this command, you can type \\[yank]."
   (interactive)
@@ -208,7 +208,7 @@ After executing this command, you can type \\[yank]."
 		    "You can type \\[yank] now."))))
 
 ;;;###autoload
-(defun rectplus-kill-ring-to-rectangle (&optional succeeding)
+(defun recter-kill-ring-to-rectangle (&optional succeeding)
   "Make rectangle from clipboard or `kill-ring'.
 After executing this command, you can type \\[yank-rectangle]."
   (interactive
@@ -231,11 +231,11 @@ After executing this command, you can type \\[yank-rectangle]."
 	  (forward-line 1))
         (setq list (nreverse list))
 	(setq killed-rectangle
-	      (rectplus-non-rectangle-to-rectangle list)))))
-  (rectplus-msg--after-kill))
+	      (recter-non-rectangle-to-rectangle list)))))
+  (recter-msg--after-kill))
 
 ;;;###autoload
-(defun rectplus-append-rectangle-to-eol (&optional preceeding)
+(defun recter-append-rectangle-to-eol (&optional preceeding)
   "Append killed rectangle to end-of-line sequentially."
   (interactive
    (let (str)
@@ -258,15 +258,15 @@ After executing this command, you can type \\[yank-rectangle]."
      killed-rectangle)))
 
 ;;;###autoload
-(defun rectplus-copy-rectangle (start end)
+(defun recter-copy-rectangle (start end)
   "Copy rectangle area."
   (interactive "r")
   (deactivate-mark)
   (setq killed-rectangle (extract-rectangle start end))
-  (rectplus-msg--after-kill))
+  (recter-msg--after-kill))
 
 ;;;###autoload
-(defun rectplus-insert-number-rectangle (begin end number-fmt &optional step start-from)
+(defun recter-insert-number-rectangle (begin end number-fmt &optional step start-from)
   "Insert incremental number into each left edges of rectangle's line.
 
 BEGIN END is rectangle region to insert numbers.
@@ -309,23 +309,23 @@ STEP is incremental count. Default is 1.
          (let ((tmp beg))
            (setq beg fin
                  fin tmp)))
-       (setq fmt (rectplus-read-from-minibuffer
+       (setq fmt (recter-read-from-minibuffer
                   "Start number or format: "
                   ;; allow all
                   ".+"))
        (when current-prefix-arg
-	 (setq step (rectplus-read-number "Step: " 1))
-         (when (rectplus--just-a-format-p fmt)
-           (setq start-num (rectplus-read-number "Start from: " 1))))
+	 (setq step (recter-read-number "Step: " 1))
+         (when (recter--just-a-format-p fmt)
+           (setq start-num (recter-read-number "Start from: " 1))))
        (deactivate-mark)
        (list beg fin fmt step start-num))))
   (let* ((min (min begin end))
          (max (max begin end))
-         (lines (rectplus--count-lines min max))
+         (lines (recter--count-lines min max))
          (l 0)
          fmt start rect-lst)
     (cond
-     ((rectplus--just-a-format-p number-fmt)
+     ((recter--just-a-format-p number-fmt)
       (setq fmt number-fmt)
       ;; default is start from 1
       (setq start (or start-from 1)))
@@ -353,14 +353,14 @@ STEP is incremental count. Default is 1.
       (insert-rectangle rect-lst))))
 
 ;;;###autoload
-(defun rectplus-create-rectangle-by-regexp (start end regexp)
+(defun recter-create-rectangle-by-regexp (start end regexp)
   "Capture string matching to REGEXP.
 Only effect to region if region is activated.
 "
   (interactive
    (let* ((beg (if mark-active (region-beginning) (point-min)))
 	  (end (if mark-active (region-end) (point-max)))
-	  (regexp (rectplus-read-regexp "Regexp")))
+	  (regexp (recter-read-regexp "Regexp")))
      (list beg end regexp)))
   (let (str list)
     (save-excursion
@@ -373,48 +373,48 @@ Only effect to region if region is activated.
     (setq list (nreverse list))
     ;; fill by space
     (setq killed-rectangle
-	  (rectplus-non-rectangle-to-rectangle list))
-    (rectplus-msg--after-kill)))
+	  (recter-non-rectangle-to-rectangle list))
+    (recter-msg--after-kill)))
 
 ;;;###autoload
-(defun rectplus-upcase-rectangle (start end)
+(defun recter-upcase-rectangle (start end)
   "Upcase rectangle"
   (interactive "*r")
-  (rectplus-do-translate start end 'upcase))
+  (recter-do-translate start end 'upcase))
 
 ;;;###autoload
-(defun rectplus-downcase-rectangle (start end)
+(defun recter-downcase-rectangle (start end)
   "Downcase rectangle"
   (interactive "*r")
-  (rectplus-do-translate start end 'downcase))
+  (recter-do-translate start end 'downcase))
 
 ;;;###autoload
-(defun rectplus-kill-to-eol (start end)
+(defun recter-kill-to-eol (start end)
   "Kill rectangle START column to end of line in rectangle.
 END is indicated as last line of rectangle.
 This function is useful if last column trailing space was truncated."
   (interactive "r")
-  (rectplus--*-to-eol-region start end t))
+  (recter--*-to-eol-region start end t))
 
 ;;;###autoload
-(defun rectplus-copy-to-eol (start end)
+(defun recter-copy-to-eol (start end)
   "Copy rectangle START column to end of line in rectangle.
 END is indicated as last line of rectangle.
 This function is useful if last column trailing space was truncated."
   (interactive "r")
-  (rectplus--*-to-eol-region start end))
+  (recter--*-to-eol-region start end))
 
 ;; for ELPA
-;;;###autoload(define-key ctl-x-r-map "C" 'rectplus-copy-rectangle)
-;;;###autoload(define-key ctl-x-r-map "N" 'rectplus-insert-number-rectangle)
-;;;###autoload(define-key ctl-x-r-map "\M-c" 'rectplus-create-rectangle-by-regexp)
-;;;###autoload(define-key ctl-x-r-map "A" 'rectplus-append-rectangle-to-eol)
-;;;###autoload(define-key ctl-x-r-map "R" 'rectplus-kill-ring-to-rectangle)
-;;;###autoload(define-key ctl-x-r-map "K" 'rectplus-rectangle-to-kill-ring)
-;;;###autoload(define-key ctl-x-r-map "\M-l" 'rectplus-downcase-rectangle)
-;;;###autoload(define-key ctl-x-r-map "\M-u" 'rectplus-upcase-rectangle)
-;;;###autoload(define-key ctl-x-r-map "E" 'rectplus-copy-to-eol)
-;;;###autoload(define-key ctl-x-r-map "\M-E" 'rectplus-kill-to-eol)
+;;;###autoload(define-key ctl-x-r-map "C" 'recter-copy-rectangle)
+;;;###autoload(define-key ctl-x-r-map "N" 'recter-insert-number-rectangle)
+;;;###autoload(define-key ctl-x-r-map "\M-c" 'recter-create-rectangle-by-regexp)
+;;;###autoload(define-key ctl-x-r-map "A" 'recter-append-rectangle-to-eol)
+;;;###autoload(define-key ctl-x-r-map "R" 'recter-kill-ring-to-rectangle)
+;;;###autoload(define-key ctl-x-r-map "K" 'recter-rectangle-to-kill-ring)
+;;;###autoload(define-key ctl-x-r-map "\M-l" 'recter-downcase-rectangle)
+;;;###autoload(define-key ctl-x-r-map "\M-u" 'recter-upcase-rectangle)
+;;;###autoload(define-key ctl-x-r-map "E" 'recter-copy-to-eol)
+;;;###autoload(define-key ctl-x-r-map "\M-E" 'recter-kill-to-eol)
 
 (provide 'recter)
 
