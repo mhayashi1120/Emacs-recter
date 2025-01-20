@@ -1,4 +1,4 @@
-;;; rect+.el --- Extensions to rect.el
+;;; recter.el --- Extensions to rect.el
 
 ;; Author: Masahiro Hayashi <mhayashi1120@gmail.com>
 ;; Keywords: extensions, data, tools
@@ -24,14 +24,14 @@
 
 ;;; Commentary:
 
-;; rect+.el provides extensions to rect.el
+;; recter.el provides extensions to rect.el
 
 ;; ## Install:
 
 ;; Put this file into load-path'ed directory, and byte compile it if
 ;; desired. And put the following expression into your ~/.emacs.
 ;;
-;;     (require 'rect+)
+;;     (require 'recter)
 ;;     (define-key ctl-x-r-map "C" 'rectplus-copy-rectangle)
 ;;     (define-key ctl-x-r-map "N" 'rectplus-insert-number-rectangle)
 ;;     (define-key ctl-x-r-map "\M-c" 'rectplus-create-rectangle-by-regexp)
@@ -45,7 +45,7 @@
 
 ;; ```********** Emacs 22 or earlier **********```
 ;;
-;;     (require 'rect+)
+;;     (require 'recter)
 ;;     (global-set-key "\C-xrC" 'rectplus-copy-rectangle)
 ;;     (global-set-key "\C-xrN" 'rectplus-insert-number-rectangle)
 ;;     (global-set-key "\C-xr\M-c" 'rectplus-create-rectangle-by-regexp)
@@ -416,6 +416,6 @@ This function is useful if last column trailing space was truncated."
 ;;;###autoload(define-key ctl-x-r-map "E" 'rectplus-copy-to-eol)
 ;;;###autoload(define-key ctl-x-r-map "\M-E" 'rectplus-kill-to-eol)
 
-(provide 'rect+)
+(provide 'recter)
 
-;;; rect+.el ends here
+;;; recter.el ends here

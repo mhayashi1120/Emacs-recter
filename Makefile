@@ -9,9 +9,9 @@ NEEDED-PACKAGES ?= s
 
 BATCH := $(EMACS) -Q -batch
 
-EL := rect+.el
+EL := recter.el
 
-TEST_EL := rect+-test.el
+TEST_EL := recter-test.el
 
 ##
 ## package.el

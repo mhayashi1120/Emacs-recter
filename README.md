@@ -1,14 +1,14 @@
-rect+.el
+recter.el
 ========
 
-rect+.el provides extensions to rect.el
+recter.el provides extensions to rect.el
 
 ## Install:
 
 Put this file into load-path'ed directory, and byte compile it if
 desired. And put the following expression into your ~/.emacs.
 
-    (require 'rect+)
+    (require 'recter)
     (define-key ctl-x-r-map "C" 'rectplus-copy-rectangle)
     (define-key ctl-x-r-map "N" 'rectplus-insert-number-rectangle)
     (define-key ctl-x-r-map "\M-c" 'rectplus-create-rectangle-by-regexp)
@@ -20,7 +20,7 @@ desired. And put the following expression into your ~/.emacs.
 
 ```********** Emacs 22 or earlier **********```
 
-    (require 'rect+)
+    (require 'recter)
     (global-set-key "\C-xrC" 'rectplus-copy-rectangle)
     (global-set-key "\C-xrN" 'rectplus-insert-number-rectangle)
     (global-set-key "\C-xr\M-c" 'rectplus-create-rectangle-by-regexp)
