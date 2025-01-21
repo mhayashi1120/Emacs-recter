@@ -3,6 +3,9 @@ recter.el
 
 recter.el provides extensions to rect.el
 
+This package has been moved from [rect+.el](https://github.com/mhayashi1120/Emacs-rectplus)
+since to resolve violation of the latest Emacs naming convention.
+
 ## Install:
 
 Put this file into load-path'ed directory, and byte compile it if
