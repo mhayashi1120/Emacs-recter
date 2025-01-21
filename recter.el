@@ -4,7 +4,7 @@
 ;; Keywords: extensions, data, tools
 ;; URL: https://github.com/mhayashi1120/Emacs-recter
 ;; Emacs: GNU Emacs 24.4 or later
-;; Version: 1.1.1
+;; Version: 1.2.0
 ;; Package-Requires: ((emacs "24.4"))
 
 ;; This program is free software; you can redistribute it and/or
